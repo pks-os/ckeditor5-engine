@@ -321,22 +321,21 @@ export default class DowncastDispatcher {
 		// In markers' case, event name == consumable name.
 		const eventName = 'addMarker:' + markerName;
 
-		// When range is collapsed - fire single event with collapsed range in consumable.
-		if ( markerRange.isCollapsed ) {
-			const consumable = new Consumable();
-			consumable.add( markerRange, eventName );
+		//
+		// First, fire an event for the whole marker.
+		//
+		const consumable = new Consumable();
+		consumable.add( markerRange, eventName );
 
-			this.conversionApi.consumable = consumable;
+		this.conversionApi.consumable = consumable;
 
-			this.fire( eventName, { markerName, markerRange }, this.conversionApi );
+		this.fire( eventName, { markerName, markerRange }, this.conversionApi );
 
-			return;
-		}
-
-		// Create consumable for each item in range.
+		//
+		// Then, fire an event for each item inside the marker range.
+		//
 		this.conversionApi.consumable = this._createConsumableForRange( markerRange, eventName );
 
-		// Create separate event for each node in the range.
 		for ( const item of markerRange.getItems() ) {
 			// Do not fire event for already consumed items.
 			if ( !this.conversionApi.consumable.test( item, eventName ) ) {
