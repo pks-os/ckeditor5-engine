@@ -331,6 +331,8 @@ export default class DowncastDispatcher {
 
 		this.fire( eventName, { markerName, markerRange }, this.conversionApi );
 
+		// TODO: do not fire if consumed.
+
 		//
 		// Then, fire an event for each item inside the marker range.
 		//
